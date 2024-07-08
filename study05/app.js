@@ -34,6 +34,12 @@ let d = [
 ];
 for(let i = 0; i < d.length; i++) {
     for(let j = 0; j < d[i].length; j++) {
+        //console.log(d[i][j]);
+    }
+    //console.log("");
+}
+for(let i in d){
+    for(let j in d[i]) {
         console.log(d[i][j]);
     }
     console.log("");
