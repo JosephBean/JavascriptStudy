@@ -18,7 +18,6 @@
 import model from "./data1.js"; 
 
 // 데이터 확인
-//console.log(model);
 /*
 let html = "";
 for(let y = 0; y < model.length; y++) {
@@ -53,29 +52,24 @@ const dataEvent = (type) => {
     }
     return html;
 }
-
 const ul = document.getElementsByTagName("ul")[0];
-//ul.innerHTML = html;
-ul.innerHTML = "";
-
 const btnEvent = (e) => {
-    //console.log(this, e, e.target, e.target.id);
     switch (e.target.id) {
         case "1":
             ul.innerHTML = "";
             break;
         case "2":
             ul.innerHTML = dataEvent(true);
+            pointEvent();
             break;
         default:
             ul.innerHTML = dataEvent();
+            pointEvent();
             break;
     }
 }
-
 const btns = document.getElementsByTagName("button");
 for(let btn of btns) {
-    //console.log(btn);
     btn.onclick = btnEvent;
 }
 /*
@@ -89,3 +83,34 @@ btns[2].onclick = function() {
     // 기능 부여
 }
 */
+
+let history = [0];
+const pointEvent = () => {
+    let div = document.getElementsByTagName("div");
+    div[history[0]].className += " bg3";
+    //console.log(history[1]);
+    if(history[1] != undefined) {
+        let styles = div[history[1]].className.split(" ");
+        //console.log(styles);
+        div[history[1]].className = styles[0];
+    }
+};
+window.addEventListener("keydown", (e) => {
+    let point = history[0];
+    switch (e.keyCode) {
+        case 37: // 왼쪽 : 0 이하는 이동 불가
+            if(point > 0) history = [point - 1, point];
+            break;
+        case 38: // 위쪽 : 4 이하는 이동 불가
+            if(point > 4) history = [point - 5, point];
+            break;
+        case 39: // 오른쪽 : 24 이상은 이동 불가
+            if(point < 24) history = [point + 1, point];
+            break;
+        case 40: // 아래쪽 : 20 이상은 이동 불가
+            if(point < 20) history = [point + 5, point];
+            break;
+    }
+    //console.log(history);
+    pointEvent();
+});
