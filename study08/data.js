@@ -1,4 +1,3 @@
-let info = {}
 export const model = [
     {
         point : 12,
@@ -12,58 +11,54 @@ export const model = [
     }
 ];
 export const pointEvent = () => {
-    let history = data.getData();
-    const p1 = history[0];
-    const p2 = history[1];
-    info.divs[p1].className += " bg3";
-    if(p2 != undefined) {
-        let styles = info.divs[p2].className.split(" ");
-        info.divs[p2].className = styles[0];
+    data.getDiv(data.getHistory(0)).className += " bg3";
+    if(data.getHistory(1) != undefined) {
+        let styles = data.getDiv(data.getHistory(1)).className.split(" ");
+        data.getDiv(data.getHistory(1)).className = styles[0];
     }
 }
 export const dataEvent = () => {
     let html = "";
-    let id = 1;
-    if(localStorage.getItem("id")) {
-        id = localStorage.getItem("id");
-    }
-
-    let history = data.getData();
-    if(!history) {
-        // history 초기값 넣어 보자.
-        history = [0];
-        data.setData(history);
-    }
-    // 이동되는 대상 초기 위치 설정!!
-    if(history[1] == undefined)  history[0] = model[id].point;
-    data.setData(history);
-
-    for(let row of model[id].data) {
+    for(let row of model[data.getId()].data) {
         let temp = "";
         for(let col of row) {
             temp += `<div class="${(col == 1) ? "bg1" : "bg2"}"></div>`;
         }
         html += `<li>${temp}</li>`;
     }
-    info.ul.innerHTML = html;
+    data.getUl().innerHTML = html;
     pointEvent();
 }
 export const btnEvent = (e) => {
     localStorage.setItem("id", e.target.id);
+    if(!data.goMove(data.getHistory(0))) data.setHistory([data.getPoint()]);
     dataEvent();
 }
-export const createEvent = (data, keyEvent) => {
-    info = data;
-    for(let btn of info.btns) btn.onclick = btnEvent;
+export const createEvent = (keyEvent) => {
+    for(let btn of data.getBtn()) btn.onclick = btnEvent;
     window.addEventListener("keydown", keyEvent);
     dataEvent();
 }
 export const data = {
-    setData : (data) => {
-        localStorage.setItem("history", JSON.stringify(data));
+    setHistory : data => localStorage.setItem("history", JSON.stringify(data)),
+    getHistory : index => {
+        let history = JSON.parse(localStorage.getItem("history"));
+        if(!history) history = [0];
+        if(history[1] == undefined) history[0] = model[data.getId()].point;
+        data.setHistory(history);
+        return history[index];
     },
-    getData : () => {
-        let h = localStorage.getItem("history");
-        return JSON.parse(h);
+    setId : target => localStorage.setItem("id", (data.getId() + ((target) ? 1 : (model.length - 1))) % model.length),
+    getId : () => (localStorage.getItem("id")) ? Number(localStorage.getItem("id")) : 1,
+    getPoint : () => model[data.getId()].point,
+    getModel : (y, x) => model[data.getId()].data[y][x],
+    getUl: () => document.getElementsByTagName("ul")[0],
+    getDiv : index => document.getElementsByTagName("div")[index],
+    getBtn : () => document.getElementsByTagName("button"),
+    goKey : () => (data.getUl().firstChild.childNodes.length > 0) ? true : false,
+    goMove : point => {
+        let y = Math.floor(point / 5);
+        let x = (point % 5);
+        return (data.getModel(y, x) == 0) ? true : false;
     }
 }
