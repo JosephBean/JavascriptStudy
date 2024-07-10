@@ -19,6 +19,7 @@ export const pointEvent = () => {
         let styles = info.divs[p2].className.split(" ");
         info.divs[p2].className = styles[0];
     }
+    console.log(p1, p2);
 }
 export const dataEvent = () => {
     let html = "";
@@ -26,7 +27,9 @@ export const dataEvent = () => {
     if(localStorage.getItem("id")) {
         id = localStorage.getItem("id");
     }
-    info.history[0] = model[id].point;
+    // 이동되는 대상 초기 위치 설정!!
+    if(info.history[1] == undefined) info.history[0] = model[id].point;
+
     for(let row of model[id].data) {
         let temp = "";
         for(let col of row) {
