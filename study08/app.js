@@ -1,7 +1,7 @@
-import { createEvent, pointEvent, model, dataEvent } from "./data.js"; 
+import { createEvent, pointEvent, model, dataEvent, data } from "./data.js"; 
 
 const info = {
-    history : [0],
+    //history : [0],
     divs : document.getElementsByTagName("div"),
     ul : document.getElementsByTagName("ul")[0],
     btns : document.getElementsByTagName("button")
@@ -17,8 +17,9 @@ const checkEvent = (point3) => {
 }
 const keyEvent = (e) => {
     if(info.ul.firstChild.childNodes.length > 0) {
-        let point1 = info.history[0];
-        let point2 = info.history[1];
+        let history = data.getData();
+        let point1 = history[0];
+        let point2 = history[1];
         let point3 = 0;
         let id = 1;
         if(localStorage.getItem("id")) id = Number(localStorage.getItem("id"));
@@ -65,12 +66,11 @@ const keyEvent = (e) => {
                 break;
         }
         if(checkEvent(point3)) {
-            info.history = [point3, point1];
+            history = [point3, point1];
+            data.setData(history);
             //pointEvent();
             dataEvent();
-        } else {
-            info.history = [point1, point2];
-        }
+        } 
     }
 }
 createEvent(info, keyEvent);

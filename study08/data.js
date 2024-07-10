@@ -12,8 +12,9 @@ export const model = [
     }
 ];
 export const pointEvent = () => {
-    const p1 = info.history[0];
-    const p2 = info.history[1];
+    let history = data.getData();
+    const p1 = history[0];
+    const p2 = history[1];
     info.divs[p1].className += " bg3";
     if(p2 != undefined) {
         let styles = info.divs[p2].className.split(" ");
@@ -27,8 +28,16 @@ export const dataEvent = () => {
     if(localStorage.getItem("id")) {
         id = localStorage.getItem("id");
     }
+
+    let history = data.getData();
+    if(!history) {
+        // history 초기값 넣어 보자.
+        history = [0];
+        data.setData(history);
+    }
     // 이동되는 대상 초기 위치 설정!!
-    if(info.history[1] == undefined) info.history[0] = model[id].point;
+    if(history[1] == undefined)  history[0] = model[id].point;
+    data.setData(history);
 
     for(let row of model[id].data) {
         let temp = "";
@@ -49,4 +58,13 @@ export const createEvent = (data, keyEvent) => {
     for(let btn of info.btns) btn.onclick = btnEvent;
     window.addEventListener("keydown", keyEvent);
     dataEvent();
+}
+export const data = {
+    setData : (data) => {
+        localStorage.setItem("history", JSON.stringify(data));
+    },
+    getData : () => {
+        let h = localStorage.getItem("history");
+        return JSON.parse(h);
+    }
 }
