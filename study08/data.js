@@ -20,7 +20,6 @@ export const pointEvent = () => {
         let styles = info.divs[p2].className.split(" ");
         info.divs[p2].className = styles[0];
     }
-    console.log(p1, p2);
 }
 export const dataEvent = () => {
     let html = "";
