@@ -24,8 +24,10 @@ for(let tag of a) {
     const event = data => document.getElementById(tag.hash.substring(1)).innerHTML = data.response
     //if(tag.id == "") {
         tag.onclick = () => {
-            $get(`./html/${tag.hash.substring(1)}.html`, {}, event);
+            let page = Number(tag.hash.substring(5)) - 1;
+            let url = `http://lh/html/${page}`;    // 스프링쪽 주소
+            // `./html/${tag.hash.substring(1)}.html` // 전 주소
+            $get(url, {}, event);
         }
     //}
-
 }
