@@ -16,25 +16,48 @@ const model = [
     "https://cdn.pixabay.com/photo/2018/02/15/09/12/underwater-3154726_1280.jpg"
 ];
 
+const view = (list) => {
+    let html = "";
+    for(let f of list) {
+        //console.log(f);
+        let url = f.domain + f.path;
+        html += `<li>
+                    <img src="${url}">
+                </li>`;
+    }
+    document.getElementsByTagName("ul")[0].innerHTML = html;
+    event(list);
+}
+
+const event = (list) => {
+    // 이미지 이벤트 추가
+    const lis = document.getElementsByTagName("li");
+    for(let li of lis) {
+        //console.log(li);
+        li.onclick = (e) => {
+            console.log(e.target);
+
+            let index = 1; // 인덱스를 구해오자
+
+            list = list.toSpliced(index, 1);
+            view(list);
+        }
+    }
+}
+
 const a = document.getElementsByTagName("a");
 for(let tag of a) {
     const event = data => {
-        console.log(JSON.parse(data.response));
+        //console.log(JSON.parse(data.response));
         const res = JSON.parse(data.response);
         if(res.status) {
-            let no = res.result.no;
-            let html = `<li>
-                            <img src="${model[no]}">
-                        </li>`;
-            console.log(html);
-            document.getElementsByTagName("ul")[0].innerHTML = html;
+            view(res.result);
         }
     }
     tag.onclick = (e) => {
         e.preventDefault();
-        //let no = Number(tag.id) - 1;
-        //console.log(no, model[no]);
-        let url = "http://lh/json/test";
+        let type = Number(tag.id);
+        let url = `http://lh/json/type/${type}`;
         $get(url, {}, event);
     }
 }
