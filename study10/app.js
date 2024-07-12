@@ -18,10 +18,23 @@ const model = [
 
 const a = document.getElementsByTagName("a");
 for(let tag of a) {
-    const event = data => console.log(data.response);
+    const event = data => {
+        console.log(JSON.parse(data.response));
+        const res = JSON.parse(data.response);
+        if(res.status) {
+            let no = res.result.no;
+            let html = `<li>
+                            <img src="${model[no]}">
+                        </li>`;
+            console.log(html);
+            document.getElementsByTagName("ul")[0].innerHTML = html;
+        }
+    }
     tag.onclick = (e) => {
         e.preventDefault();
-        let no = Number(tag.id) - 1;
-        console.log(no, model[no]);
+        //let no = Number(tag.id) - 1;
+        //console.log(no, model[no]);
+        let url = "http://lh/json/test";
+        $get(url, {}, event);
     }
 }
