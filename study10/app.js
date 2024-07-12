@@ -28,19 +28,22 @@ const view = (list) => {
     document.getElementsByTagName("ul")[0].innerHTML = html;
     event(list);
 }
-
-const event = (list) => {
-    // 이미지 이벤트 추가
+const event2 = data => {
+    let res = JSON.parse(data.response);
+    //console.log(res);
+    if(res.status) {
+        view(res.result);
+    }
+} 
+const event = (list) => { // 이미지 이벤트 추가
     const lis = document.getElementsByTagName("li");
-    for(let li of lis) {
-        //console.log(li);
-        li.onclick = (e) => {
-            console.log(e.target);
-
-            let index = 1; // 인덱스를 구해오자
-
-            list = list.toSpliced(index, 1);
-            view(list);
+    for(let index = 0; index < lis.length; index++) {
+        lis[index].onclick = () => {
+            //console.log(list[index].no);
+            //view(list.toSpliced(index, 1));
+            let url = `http://lh/json/no/${list[index].no}/type/${list[index].type}`;
+            //console.log(url);
+            $get(url, {}, event2);
         }
     }
 }
