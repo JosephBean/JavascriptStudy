@@ -18,49 +18,24 @@ const model = [
 
 const view = (list) => {
     let html = "";
-    for(let f of list) {
-        //console.log(f);
-        let url = f.domain + f.path;
-        html += `<li>
-                    <img src="${url}">
-                </li>`;
-    }
+    for(let f of list) html += `<li><img src="${f.domain + f.path}"><p>${f.cnt}</p></li>`;
     document.getElementsByTagName("ul")[0].innerHTML = html;
     event(list);
 }
-const event2 = data => {
-    let res = JSON.parse(data.response);
-    //console.log(res);
-    if(res.status) {
-        view(res.result);
-    }
-} 
 const event = (list) => { // 이미지 이벤트 추가
     const lis = document.getElementsByTagName("li");
     for(let index = 0; index < lis.length; index++) {
-        lis[index].onclick = () => {
-            //console.log(list[index].no);
-            //view(list.toSpliced(index, 1));
-            let url = `http://lh/json/no/${list[index].no}/type/${list[index].type}`;
-            //console.log(url);
-            $get(url, {}, event2);
-        }
+        lis[index].onclick = () => $get(`http://lh/json/no/${list[index].no}/type/${list[index].type}`, {}, callBack);
     }
 }
-
-const a = document.getElementsByTagName("a");
-for(let tag of a) {
-    const event = data => {
-        //console.log(JSON.parse(data.response));
-        const res = JSON.parse(data.response);
-        if(res.status) {
-            view(res.result);
-        }
-    }
+const callBack = data => {
+    const res = JSON.parse(data.response);
+    console.log(res);
+    if(res.status) view(res.result);
+}
+for(let tag of document.getElementsByTagName("a")) {
     tag.onclick = (e) => {
         e.preventDefault();
-        let type = Number(tag.id);
-        let url = `http://lh/json/type/${type}`;
-        $get(url, {}, event);
+        $get(`http://lh/json/type/${Number(tag.id)}`, {}, callBack);
     }
 }
